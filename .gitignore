@@ -1,0 +1,5 @@
+!bin/.gitkeep
+.envrc
+bin/*
+credentials.json
+mysql/init.sql
