@@ -4,3 +4,4 @@ export DATABASE_NAME=
 export DATABASE_USERNAME=
 export DATABASE_PASSWORD=
 export DATABASE_COLLATION=utf8mb4_0900_ai_ci
+export CREDENTIALS_JSON="$(< ./credentials.json)"

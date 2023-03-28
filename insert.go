@@ -20,9 +20,8 @@ import (
 var fs embed.FS
 
 const (
-	credentialFile = "credentials.json"
-	sqlFile        = "sql/insert.sql"
-	timeZone       = "Asia/Tokyo"
+	sqlFile  = "sql/insert.sql"
+	timeZone = "Asia/Tokyo"
 )
 
 type InsertOption struct {
@@ -90,10 +89,7 @@ func Insert(insertOption InsertOption) int {
 		events[execution.id] = event
 	}
 
-	credentials, err := os.ReadFile(credentialFile)
-	if err != nil {
-		log.Fatal(err)
-	}
+	credentials := []byte(getEnv("CREDENTIALS_JSON"))
 	config, err := google.JWTConfigFromJSON(credentials, calendar.CalendarEventsScope)
 	if err != nil {
 		log.Fatal(err)
