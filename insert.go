@@ -73,9 +73,10 @@ func Insert(insertOption InsertOption) int {
 		}
 
 		event := &calendar.Event{
-			Summary: fmt.Sprintf("[%03d]%s", execution.id, execution.job),
-			Start:   &calendar.EventDateTime{DateTime: execution.dateStarted.Format(time.RFC3339), TimeZone: timeZone},
-			End:     &calendar.EventDateTime{DateTime: execution.dateCompleted.Format(time.RFC3339), TimeZone: timeZone},
+			Summary:     fmt.Sprintf("[%s]%s", execution.project, execution.job),
+			Description: fmt.Sprintf("uuid: %s\nproject: %s\njob: %s", execution.uuid, execution.project, execution.job),
+			Start:       &calendar.EventDateTime{DateTime: execution.dateStarted.Format(time.RFC3339), TimeZone: timeZone},
+			End:         &calendar.EventDateTime{DateTime: execution.dateCompleted.Format(time.RFC3339), TimeZone: timeZone},
 		}
 
 		if check := checkGcal(execution); !check {
