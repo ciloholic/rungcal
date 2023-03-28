@@ -1,10 +1,13 @@
 package main
 
 import (
+	"io"
+	"log"
 	"os"
 
 	"github.com/alecthomas/kingpin/v2"
 	"github.com/ciloholic/rungcal"
+	"github.com/hashicorp/logutils"
 )
 
 var (
@@ -27,12 +30,14 @@ func main() {
 func _main() int {
 	command := kingpin.MustParse(app.Parse(os.Args[1:]))
 	insertOption := rungcal.InsertOption{
-		Option:   rungcal.Option{TargetDate: *cliTargetDate, Project: *cliProject, Verbose: *cliVerbose, DryRun: *cliDryRun},
+		Option:   rungcal.Option{TargetDate: *cliTargetDate, Project: *cliProject, DryRun: *cliDryRun},
 		ReCreate: *insertRecreate,
 	}
 	deleteOption := rungcal.DeleteOption{
-		Option: rungcal.Option{TargetDate: *cliTargetDate, Project: *cliProject, Verbose: *cliVerbose, DryRun: *cliDryRun},
+		Option: rungcal.Option{TargetDate: *cliTargetDate, Project: *cliProject, DryRun: *cliDryRun},
 	}
+
+	log.SetOutput(logFilter(*cliVerbose))
 
 	switch command {
 	case insertCommand.FullCommand():
@@ -43,4 +48,19 @@ func _main() int {
 	}
 
 	return 0
+}
+
+func logFilter(debug bool) io.Writer {
+	minLevel := logutils.LogLevel("INFO")
+	if debug {
+		minLevel = logutils.LogLevel("DEBUG")
+	}
+
+	filter := &logutils.LevelFilter{
+		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
+		MinLevel: minLevel,
+		Writer:   os.Stderr,
+	}
+
+	return filter
 }

@@ -6,7 +6,6 @@ import (
 	"embed"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -47,8 +46,8 @@ func Insert(insertOption InsertOption) int {
 	date, _ := time.ParseInLocation(time.DateOnly, insertOption.TargetDate, getLocation())
 	start := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
 	end := time.Date(start.Year(), start.Month(), start.Day(), 23, 59, 59, 0, start.Location())
-	log.Println("=== Targate Date(start ~ end) ===")
-	log.Printf("%s ~ %s", start.String(), end.String())
+	log.Print("[INFO] === Targate Date(start ~ end) ===")
+	log.Printf("[INFO] %s ~ %s", start.String(), end.String())
 
 	sql, err := fs.ReadFile(sqlFile)
 	if err != nil {
@@ -60,7 +59,7 @@ func Insert(insertOption InsertOption) int {
 	}
 	defer rows.Close()
 
-	log.Println("=== Select Database ===")
+	log.Println("[INFO] === Select Database ===")
 	events := make(map[int]*calendar.Event)
 	for rows.Next() {
 		var execution Execution
@@ -82,9 +81,7 @@ func Insert(insertOption InsertOption) int {
 		if check := checkGcal(execution); !check {
 			continue
 		}
-		if insertOption.Verbose {
-			log.Printf("%s %s %5d(s) %s", event.Start.DateTime, event.End.DateTime, execution.executionTime, event.Summary)
-		}
+		log.Printf("[DEBUG] %s %s %5d(s) %s", event.Start.DateTime, event.End.DateTime, execution.executionTime, event.Summary)
 
 		events[execution.id] = event
 	}
@@ -101,19 +98,19 @@ func Insert(insertOption InsertOption) int {
 		log.Fatal(err)
 	}
 
-	log.Println("=== Insert Google Calendar ===")
+	log.Println("[INFO] === Insert Google Calendar ===")
 	if insertOption.DryRun {
 		for _, event := range events {
-			log.Printf("*** DRY RUN *** %s %s %s", event.Start.DateTime, event.End.DateTime, event.Summary)
+			log.Printf("[DEBUG] *** DRY RUN *** %s %s %s", event.Start.DateTime, event.End.DateTime, event.Summary)
 		}
 	} else {
 		for _, event := range events {
 			_, err = srv.Events.Insert(getEnv("CALENDAR_ID"), event).Do()
 			if err != nil {
-				log.Fatalf("Unable to create event. %v\n", err)
+				log.Fatalf("[ERROR] %v\n", err)
 			}
 
-			log.Printf("%s %s %s", event.Start.DateTime, event.End.DateTime, event.Summary)
+			log.Printf("[DEBUG] %s %s %s", event.Start.DateTime, event.End.DateTime, event.Summary)
 			// APIの叩き過ぎないように制限する
 			time.Sleep(300 * time.Millisecond)
 		}
@@ -140,14 +137,6 @@ func dbInit() *sql.DB {
 	}
 
 	return db
-}
-
-func getEnv(key string, defaulValue ...string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-
-	return defaulValue[0]
 }
 
 func getLocation() *time.Location {

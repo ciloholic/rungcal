@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/alecthomas/kingpin/v2 v2.3.2
 	github.com/go-sql-driver/mysql v1.7.0
+	github.com/hashicorp/logutils v1.0.0
 	github.com/robfig/cron v1.2.0
 	golang.org/x/oauth2 v0.6.0
 	google.golang.org/api v0.113.0
