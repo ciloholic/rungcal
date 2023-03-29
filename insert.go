@@ -73,7 +73,7 @@ func Insert(insertOption InsertOption) int {
 		}
 
 		event := &calendar.Event{
-			Summary:     fmt.Sprintf("[%s]%s", execution.project, execution.job),
+			Summary:     execution.job,
 			Description: fmt.Sprintf("uuid: %s\nproject: %s\njob: %s", execution.uuid, execution.project, execution.job),
 			Start:       &calendar.EventDateTime{DateTime: execution.dateStarted.Format(time.RFC3339), TimeZone: timeZone},
 			End:         &calendar.EventDateTime{DateTime: execution.dateCompleted.Format(time.RFC3339), TimeZone: timeZone},
@@ -141,12 +141,12 @@ func dbInit() *sql.DB {
 }
 
 func getLocation() *time.Location {
-	lc, err := time.LoadLocation(timeZone)
+	tz, err := time.LoadLocation(timeZone)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return lc
+	return tz
 }
 
 // 実行間隔からGカレンダーに登録するか判断する
