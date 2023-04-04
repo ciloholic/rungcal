@@ -87,7 +87,7 @@ func Insert(insertOption InsertOption) int {
 		events[execution.id] = event
 	}
 
-	credentials := []byte(getEnv("CREDENTIALS_JSON"))
+	credentials := []byte(getEnv("GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_JSON"))
 	config, err := google.JWTConfigFromJSON(credentials, calendar.CalendarEventsScope)
 	if err != nil {
 		log.Fatal(err)
@@ -106,7 +106,7 @@ func Insert(insertOption InsertOption) int {
 		}
 	} else {
 		for _, event := range events {
-			_, err = srv.Events.Insert(getEnv("CALENDAR_ID"), event).Do()
+			_, err = srv.Events.Insert(getEnv("GOOGLE_CALENDAR_ID"), event).Do()
 			if err != nil {
 				log.Fatalf("[ERROR] %v\n", err)
 			}

@@ -1,7 +1,7 @@
-export CALENDAR_ID=
 export DATABASE_HOST=127.0.0.1
 export DATABASE_NAME=
 export DATABASE_USERNAME=
 export DATABASE_PASSWORD=
 export DATABASE_COLLATION=utf8mb4_0900_ai_ci
-export CREDENTIALS_JSON="$(< ./credentials.json)"
+export GOOGLE_CALENDAR_ID=
+export GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_JSON="$(< ./credentials.json)"
