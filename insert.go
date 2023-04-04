@@ -68,7 +68,7 @@ func Insert(insertOption InsertOption) int {
 			panic(err.Error())
 		}
 
-		if insertOption.Project != execution.project {
+		if insertOption.Project != "" && insertOption.Project != execution.project {
 			continue
 		}
 
