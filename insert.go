@@ -158,7 +158,8 @@ func checkGcal(row Execution) bool {
 	p := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow)
 	s, err := p.Parse(row.schedule)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("[ERROR] Cron expression invalid syntax '%s' (%v)", row.schedule, err)
+		return false
 	}
 
 	t1 := s.Next(time.Now())
