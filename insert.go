@@ -68,7 +68,7 @@ func Insert(insertOption InsertOption) int {
 			panic(err.Error())
 		}
 
-		if insertOption.Project != execution.project {
+		if insertOption.Project != "" && insertOption.Project != execution.project {
 			continue
 		}
 
@@ -87,7 +87,7 @@ func Insert(insertOption InsertOption) int {
 		events[execution.id] = event
 	}
 
-	credentials := []byte(getEnv("CREDENTIALS_JSON"))
+	credentials := []byte(getEnv("GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_JSON"))
 	config, err := google.JWTConfigFromJSON(credentials, calendar.CalendarEventsScope)
 	if err != nil {
 		log.Fatal(err)
@@ -106,7 +106,7 @@ func Insert(insertOption InsertOption) int {
 		}
 	} else {
 		for _, event := range events {
-			_, err = srv.Events.Insert(getEnv("CALENDAR_ID"), event).Do()
+			_, err = srv.Events.Insert(getEnv("GOOGLE_CALENDAR_ID"), event).Do()
 			if err != nil {
 				log.Fatalf("[ERROR] %v\n", err)
 			}
@@ -158,7 +158,8 @@ func checkGcal(row Execution) bool {
 	p := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow)
 	s, err := p.Parse(row.schedule)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("[ERROR] Cron expression invalid syntax '%s' (%v)", row.schedule, err)
+		return false
 	}
 
 	t1 := s.Next(time.Now())
