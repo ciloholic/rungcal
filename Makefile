@@ -3,27 +3,27 @@
 
 all: upd ps
 
-ps: ## 起動中のコンテナを表示
+ps: ## Display containers being started
 	docker compose ps
-up: ## コンテナを起動
+up: ## Start containers
 	docker compose up
-upd: ## コンテナをバックグラウンドで起動
+upd: ## Start containers in background
 	docker compose up -d
-stop: ## コンテナを停止
+stop: ## Stop containers
 	docker compose stop
-down: ## コンテナを破棄
+down: ## Destroy containers
 	docker compose down --remove-orphans
-downv: ## コンテナとボリューム、ネットワークを破棄
+downv: ## Destroy containers, volumes and networks
 	docker compose down -v --remove-orphans
-prune: ## 不要なDockerイメージを破棄
+prune: ## Destroy unneeded Docker images
 	docker system prune -f
-restart: ## コンテナを再起動
+restart: ## Restart containers
 	docker compose restart
-login: ## Mysqlコンテナへログイン
+login: ## Login to Mysql container
 	docker compose exec mysql bash
 
 # https://postd.cc/auto-documented-makefile/
-help: ## ヘルプ
+help: ## Help
 	@echo 'Usage: make [target]'
 	@echo ''
 	@echo 'Targets:'

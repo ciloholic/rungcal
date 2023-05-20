@@ -149,7 +149,7 @@ func getLocation() *time.Location {
 	return tz
 }
 
-// 実行間隔からGカレンダーに登録するか判断する
+// Determine whether to register to Google Calendar based on the execution interval
 func checkGcal(row Execution) bool {
 	if row.executionTime <= 0 {
 		return false
@@ -164,6 +164,6 @@ func checkGcal(row Execution) bool {
 	t1 := s.Next(time.Now())
 	t2 := s.Next(t1)
 
-	// ジョブ実行間隔が60分未満はGカレンダーに登録しない
+	// If the job execution interval is less than 60 minutes, the job is not registered in Google Calendar
 	return t2.Sub(t1).Minutes() > 60
 }
