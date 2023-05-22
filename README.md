@@ -1,8 +1,8 @@
 # build
 
 ```
-$ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/rundgcal cmd/rungcal/main.go
-$ GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -o bin/rundgcal cmd/rungcal/main.go
+$ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/rungcal cmd/rungcal/main.go
+$ GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -o bin/rungcal cmd/rungcal/main.go
 ```
 
 # execution
